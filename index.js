@@ -2,24 +2,51 @@
  * This is the main entrypoint to your Probot app
  * @param {import('probot').Application} app
  */
-module.exports = (app) => {
-  // Your code here
-  app.log("Yay, the app was loaded!");
 
-  app.on("issues.opened", async (context) => {
-    const issueComment = context.issue({
-      body: "Thanks for opening this issue!",
+const fs = require("fs");
+
+module.exports = (app) => {
+  app.log("App was loaded!");
+
+  app.on("pull_request.merged", async (context) => {
+    context.log("pr merged events log: ", {
+      event: context.event,
+      action: context.payload.action,
     });
-    return context.github.issues.createComment(issueComment);
+
+    let data = JSON.stringify(context);
+    fs.appendFile("pr-merged-events-data.json", data, function (err) {
+      if (err) throw err;
+      app.log("pr-merged-events-data.json File Saved!");
+    });
+    return context.log;
+  });
+
+  app.on("push", async (context) => {
+    context.log("push events log: ", {
+      event: context.event,
+      action: context.payload.action,
+    });
+
+    let data = JSON.stringify(context);
+    fs.appendFile("push-events-data.json", data, function (err) {
+      if (err) throw err;
+      app.log("push-events-data.json File Saved!");
+    });
+    return context.log;
   });
 
   app.on("*", async (context) => {
-    context.log({ event: context.event, action: context.payload.action });
+    context.log("all events log: ", {
+      event: context.event,
+      action: context.payload.action,
+    });
+
+    let data = JSON.stringify(context);
+    fs.appendFile("all-events-data.json", data, function (err) {
+      if (err) throw err;
+      app.log("all-events-data.json File Saved!");
+    });
+    return context.log;
   });
-
-  // For more information on building apps:
-  // https://probot.github.io/docs/
-
-  // To get your app running against GitHub, see:
-  // https://probot.github.io/docs/development/
 };
