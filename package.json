@@ -21,9 +21,11 @@
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
+    "@google-cloud/firestore": "^4.2.0",
     "express": "^4.17.1",
     "firebase": "^7.17.2",
     "probot": "^9.5.3",
+    "probot-serverless-now": "^2.1.2",
     "pug": "^3.0.0"
   },
   "devDependencies": {
