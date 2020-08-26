@@ -26,6 +26,25 @@ var firebaseConfig = {
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+var firestore = firebase.firestore();
+// TO DO: Update with API call
+// Currently, this captures static data from https://console.firebase.google.com/project/guru-metrics-dashboard/firestore/data~2Fpull-requests~2FXpPMYzaODQYsS5uSZoAt
+firestore
+  .collection("pull-requests")
+  .get()
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      console.log(`${doc.id} => ${doc.data()}`);
+    });
+  });
+firestore
+  .collection("pull-requests")
+  .where("merge", "==", "true")
+  .onSnapshot(function (snapshot) {
+    snapshot.forEach(function (data) {
+      console.log(data.data());
+    });
+  });
 
 module.exports = (app) => {
   // Get a top level express router to expose new HTTP endpoints
